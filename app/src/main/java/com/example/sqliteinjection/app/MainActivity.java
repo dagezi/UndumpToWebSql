@@ -1,19 +1,41 @@
 package com.example.sqliteinjection.app;
 
 import android.app.Activity;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 
 public class MainActivity extends Activity {
+
+    private SQLiteDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-    }
 
+        database = new MyDbOpenHelper(this, "test.db", "test", 1).getReadableDatabase();
+
+        Cursor cursor = database.query(
+                /* table */ "prefecture",
+                /* columns */ new String[]{"capital"},
+                /* where */ null,
+                /* where args */ null,
+                /* group by */ null,
+                /* order by */ null,
+                /* limit */ null);
+
+        StringBuilder builder = new StringBuilder();
+        for (String name : cursor.getColumnNames()) {
+            builder.append(name);
+            builder.append("\n");
+        }
+        ((TextView)findViewById(R.id.text_view)).setText(builder);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
