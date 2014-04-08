@@ -30,9 +30,11 @@ public class MainActivity extends Activity {
                 /* limit */ null);
 
         StringBuilder builder = new StringBuilder();
-        for (String name : cursor.getColumnNames()) {
-            builder.append(name);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            builder.append(cursor.getString(0));
             builder.append("\n");
+            cursor.moveToNext();
         }
         ((TextView)findViewById(R.id.text_view)).setText(builder);
     }
