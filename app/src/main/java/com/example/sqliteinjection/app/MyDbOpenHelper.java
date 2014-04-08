@@ -6,12 +6,6 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.channels.Channels;
-import java.nio.channels.FileChannel;
-import java.nio.channels.ReadableByteChannel;
 
 /**
  * My own database open helper.
@@ -56,23 +50,7 @@ public class MyDbOpenHelper extends SQLiteOpenHelper {
     }
 
     private void copyDatabase() {
-        try {
-            File databaseDir = dbPath.getParentFile();
-            if (!databaseDir.exists()) {
-                databaseDir.mkdir();
-            }
-
-            InputStream inputStream = context.getAssets().open(dbSrc);
-            int size = inputStream.available();
-            ReadableByteChannel input = Channels.newChannel(inputStream);
-            FileChannel output = new FileOutputStream(this.dbPath).getChannel();
-            output.transferFrom(input, 0, size);
-
-            output.close();
-            input.close();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        Util.extractAsset(context, dbSrc, dbPath);
     }
 
     @Override
