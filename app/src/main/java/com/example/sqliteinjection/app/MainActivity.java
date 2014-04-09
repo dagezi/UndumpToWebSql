@@ -20,20 +20,19 @@ import java.io.File;
 public class MainActivity extends Activity {
     private String startUrl = "http://192.168.100.200:8080/websql/";
     private String dbDomain = "http_192.168.100.200_8080";
+    private String dbPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        dbPath = getDatabasePath("db").getAbsolutePath();
+
         WebView webView = (WebView) findViewById(R.id.webView);
 
         webView.setWebChromeClient(new MyWebChromeClient());
         webView.setWebViewClient(new MyWebViewClient());
-
-        String dbPath = getDatabasePath("db").getAbsolutePath();
-        Util.extractAsset(this, "test.db",
-                new File(dbPath + "/" + dbDomain + "/0000000000000001.db"));
 
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
@@ -72,6 +71,12 @@ public class MainActivity extends Activity {
         public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
             Log.i("MyWebView", consoleMessage.message() + ":" + consoleMessage.sourceId() + ":"
                     + consoleMessage.lineNumber());
+
+            if (consoleMessage.message().startsWith("!extractDB")) {
+                // TODO: find database file name from Databases.db
+                Util.extractAsset(MainActivity.this, "test.db",
+                        new File(dbPath + "/" + dbDomain + "/0000000000000001.db"));
+            }
             return true;
         }
 
