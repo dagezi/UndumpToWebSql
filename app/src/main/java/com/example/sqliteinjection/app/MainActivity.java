@@ -64,6 +64,13 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void copyDatabase() {
+        Util.extractAsset(MainActivity.this, "Database.db",
+                new File(dbPath + "/Database.db"));
+        Util.extractAsset(MainActivity.this, "test.db",
+                new File(dbPath + "/" + dbDomain + "/0000000000000002.db"));
+    }
+
     private class MyWebChromeClient extends WebChromeClient {
         private final static String TAG = "MyWebView";
 
@@ -72,11 +79,6 @@ public class MainActivity extends Activity {
             Log.i("MyWebView", consoleMessage.message() + ":" + consoleMessage.sourceId() + ":"
                     + consoleMessage.lineNumber());
 
-            if (consoleMessage.message().startsWith("!extractDB")) {
-                // TODO: find database file name from Databases.db
-                Util.extractAsset(MainActivity.this, "test.db",
-                        new File(dbPath + "/" + dbDomain + "/0000000000000001.db"));
-            }
             return true;
         }
 
